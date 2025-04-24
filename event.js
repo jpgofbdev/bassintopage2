@@ -311,9 +311,63 @@ function parseInstallationsData(data) {
     return markers;
 }
 
+//AAC ET CIE
+// Déclaration des variables de couche (accessibles globalement)
+let aacLayer = null;
+let pprLayer = null;
+
+// AAC
+document.getElementById('AAC-checkbox').addEventListener('change', function(event) {
+  if (event.target.checked) {
+    fetch('./AAC_CVL.geojson')
+      .then(response => response.json())
+      .then(data => {
+        aacLayer = L.geoJSON(data, {
+          style: {
+            color: '#1f78b4',
+            weight: 2,
+            fillOpacity: 0.3
+          },
+          onEachFeature: function (feature, layer) {
+            const props = feature.properties;
+            if (props?.NomDeAAC_A) {
+              layer.bindPopup(props.NomDeAAC_A);
+            }
+          }
+        }).addTo(map);
+      })
+      .catch(err => console.error('Erreur chargement AAC_CVL.geojson :', err));
+  } else {
+    if (aacLayer) {
+      map.removeLayer(aacLayer);
+    }
+  }
+});
+
+// PPR
+document.getElementById('PPR-checkbox').addEventListener('change', function(event) {
+  if (event.target.checked) {
+    fetch('./PPR_CVL.geojson')
+      .then(response => response.json())
+      .then(data => {
+        pprLayer = L.geoJSON(data, {
+          style: {
+            color: '#e31a1c',
+            weight: 2,
+            fillOpacity: 0.3
+          }
+        }).addTo(map);
+      })
+      .catch(err => console.error('Erreur chargement PPR_CVL.geojson :', err));
+  } else {
+    if (pprLayer) {
+      map.removeLayer(pprLayer);
+    }
+  }
+});
 
 
-
+//
 
 
 
